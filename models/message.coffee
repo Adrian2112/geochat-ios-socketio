@@ -7,9 +7,10 @@ protect = (v) -> null
 
 messageSchema = new Schema({
     created_at: {type: Date, default: Date.now, set: protect}
-    user: String
+    user_id: { type: ObjectId }
     message: String
     place_id: String
+    photo_url: String
 })
 
 
