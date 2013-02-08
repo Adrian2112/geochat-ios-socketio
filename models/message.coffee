@@ -10,9 +10,9 @@ messageSchema = new Schema({
     user_id: { type: ObjectId }
     message: String
     place_id: String
-    photo_url: String
+    photo: String
+    user: String
 })
-
 
 
 module.exports = mongoose.model('Message', messageSchema)

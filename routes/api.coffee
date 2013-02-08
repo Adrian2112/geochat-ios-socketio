@@ -5,6 +5,8 @@ module.exports = (app, foursquare) ->
 
   app.get '/register/:access_token', (req, res) ->
 
+    console.log "registering user with access_token #{req.params.acces_token}"
+
     foursquare.Users.getUser 'self', req.params.access_token, (err, response) ->
 
       if err != null or response == null
@@ -15,9 +17,9 @@ module.exports = (app, foursquare) ->
         user_info = {
           name: "#{user.firstName} #{user.lastName}"
           gender: user.gender
-          photo: "#{user.photo.prefix}40x40#{user.photo.suffix}"
+          photo: "#{user.photo.prefix}100x100#{user.photo.suffix}"
           foursquare_id: user.id
-          access_token: req.access_token
+          access_token: req.params.access_token
         }
 
 

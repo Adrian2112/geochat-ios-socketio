@@ -40,19 +40,21 @@ io.sockets.on 'connection', (socket) ->
     Message.find {place_id: joinedRoom}, [], { sort: [['created_at', -1]], limit: 10 }, (err, messages) ->
       if messages
         messages = messages.reverse()
+        
         socket.emit("init messages", {messages: messages})
 
-    User.findOne {access_token: access_token}, (err,obj) ->
-      user = obj
-      socket.broadcast.to(joinedRoom).emit("new user", data.user)
+    User.find {access_token: access_token}, [], {}, (err,obj) ->
+      user = obj[0]
+      console.log "user: #{JSON.stringify user}"
+      socket.broadcast.to(joinedRoom).emit("new user", user)
      
   socket.on 'new message', (message) ->
-    console.log message
-    console.log joinedRoom
     if  joinedRoom
       # protected variables
       message.place_id = joinedRoom
       message.user_id = user._id
+      message.photo = user.photo
+      message.user = user.name
 
       # create message object and save to the DB
       new_message = (new Message(message))
@@ -60,9 +62,6 @@ io.sockets.on 'connection', (socket) ->
 
       # get te message in pure json
       json_message = new_message.toObject()
-      
-      # set message information for broadcast
-      json_message.user = user
       
       socket.broadcast.to(joinedRoom).emit("new message", { messages: [json_message] })
 

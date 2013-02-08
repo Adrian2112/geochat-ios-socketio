@@ -1,6 +1,6 @@
 {
     "name": "geochat-socketio",
-    "version": "0.0.1-11",
+    "version": "0.0.1-18",
     "private": true,
     "dependencies": {
         "socket.io": "0.8.x",
@@ -9,7 +9,6 @@
         "node-foursquare": "0.2.x",
         "express": "3.1.x",
         "underscore": "1.4.x"
-
     },
     "devDependencies": {},
     "engines": {
