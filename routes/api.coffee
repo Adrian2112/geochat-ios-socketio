@@ -1,4 +1,5 @@
 User = require "../models/user.coffee"
+Venue = require "../models/venue.coffee"
 _ = require("underscore")
 
 module.exports = (app, foursquare) ->
@@ -35,4 +36,32 @@ module.exports = (app, foursquare) ->
             obj.save ->
               res.json(obj)
 
+
+  app.get '/:access_token/venues/search/:latlng', (req, res) ->
+    latlng = req.params.latlng.split(",")
+    lat = latlng[0]
+    lng = latlng[1]
+
+    foursquare.Venues.search lat, lng, null, {}, req.params.access_token, (error, results) ->
+
+      ids = _.map results.venues, (e, i) -> e.id
+
+      Venue.find { foursquare_id: { $in: ids } }, (err, venues_results) ->
+
+        users_in_venue = {}
+
+        _.each venues_results, (e, i) ->
+          users_in_venue[e.foursquare_id] = e.users_in
+
+        json = _.map results.venues, (venue, i) ->
+          icon = venue.categories[0].icon
+          {
+            id: venue.id
+            name: venue.name
+            distance: venue.location.distance
+            image: "#{icon.prefix}44#{icon.name}"
+            users_in: users_in_venue[venue.id] || 0
+          }
+
+        res.json(json)
 
