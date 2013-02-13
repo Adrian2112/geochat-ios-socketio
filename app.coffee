@@ -14,6 +14,9 @@ foursquare_config = {
     'clientSecret' : 'clientSecret',
     'redirectUrl' : 'http://geochat.com'
   }
+  foursquare: {
+    version: '20120101'
+  }
 }
 foursquare = require('node-foursquare')(foursquare_config)
 
