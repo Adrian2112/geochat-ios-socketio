@@ -15,8 +15,12 @@ module.exports = (io) ->
       console.log data
       socket.join data.room
       joinedRoom = data.room
+
       Venue.set_users_in joinedRoom, io.sockets.clients(joinedRoom).length, (err, result) ->
         console.log err, result
+        socket.broadcast.to(joinedRoom).emit("users count", {count: result.users_in})
+        socket.emit("users count", {count: result.users_in})
+        console.log "users coutn #{result.users_in}"
 
       access_token = data.access_token
 
@@ -52,3 +56,6 @@ module.exports = (io) ->
       console.log "disconnected #{joinedRoom}"
       Venue.set_users_in joinedRoom, io.sockets.clients(joinedRoom).length - 1, (err, result) ->
         console.log err, result
+        socket.broadcast.to(joinedRoom).emit("users count", {count: result.users_in})
+        socket.emit("users count", {count: result.users_in})
+        console.log "users count #{result.users_in}"
