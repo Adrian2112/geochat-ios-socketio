@@ -54,7 +54,8 @@ module.exports = (app, foursquare) ->
           users_in_venue[e.foursquare_id] = e.users_in
 
         json = _.map results.venues, (venue, i) ->
-          icon = venue.categories[0].icon
+          categories = venue.categories
+          icon = if categories.length > 0 then categories[0].icon else  ''
           {
             id: venue.id
             name: venue.name
